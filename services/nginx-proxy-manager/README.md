@@ -3,13 +3,13 @@
 Download the `docker-compose.yaml` file from git by using this command.
 
 ```bash
-curl -O https://raw.githubusercontent.com/shibbirweb/home-lab/refs/heads/master/services/wireguard/docker-compose.yaml
+curl -O https://raw.githubusercontent.com/shibbirweb/home-lab/refs/heads/master/services/nginx-proxy-manager/docker-compose.yaml
 ```
 
 Create volumes directories where the `docker-compose.yaml` file exists.
 
 ```bash
-mkdir aconf conf data
+mkdir letsencrypt data
 ```
 
 Run docker compose by using this command
@@ -20,10 +20,4 @@ docker compose up -d
 
 After successfull docker compose run, visit the dashboard site using this URL
 
-`http://<your-server-ip>:10086`
-
-The default credentials is
-
-Username: ```admin```
-
-Password: ```admin```
+`http://<your-server-ip>:81`

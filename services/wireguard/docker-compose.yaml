@@ -3,6 +3,8 @@ services:
     image: ghcr.io/wgdashboard/wgdashboard:latest
     restart: unless-stopped
     container_name: wgdashboard
+    environment:
+      - tz=Asia/Dhaka
 
     ports:
       - 10086:10086/tcp
