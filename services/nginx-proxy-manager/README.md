@@ -18,6 +18,6 @@ Run docker compose by using this command
 docker compose up -d
 ```
 
-After successfull docker compose run, visit the dashboard site using this URL
+After successful docker compose run, visit the dashboard site using this URL
 
 `http://<your-server-ip>:81`
