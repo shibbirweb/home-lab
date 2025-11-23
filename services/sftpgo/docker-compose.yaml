@@ -1,0 +1,15 @@
+services:
+  sftpgo:
+    image: drakkan/sftpgo:latest
+    container_name: sftpgo
+    user: "$HOST_UID:$HOST_GID"
+    ports:
+      - 8080:8080
+      - 2022:2022
+    volumes:
+      - type: bind
+        source: '"${PWD}/files"'
+        target: /srv/sftpgo
+      - type: bind
+        source: '"${PWD}/config"'
+        target: /var/lib/sftpgo
