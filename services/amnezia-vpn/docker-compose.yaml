@@ -1,0 +1,9 @@
+services:
+  ssh-service:
+    image: nokitakaze/amnezia-vpn-server
+    ports:
+      - "2222:22"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker socket
+      - ./authorized_keys:/root/.ssh/authorized_keys
+      - ./ssh-keys:/etc/ssh/server-keys

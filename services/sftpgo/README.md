@@ -21,3 +21,9 @@ HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up -d
 After successful docker compose run, visit the dashboard site using this URL
 
 `http://<your-server-ip>:8080`
+
+To stop docker compose, use this command
+
+```bash
+HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose down
+```
