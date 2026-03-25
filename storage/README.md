@@ -234,6 +234,123 @@ Other services mount "shared-media" → they access /root/storage/shared
 
 ---
 
+## Removing the Storage
+
+### ⚠️ Before You Remove — Check Active Containers
+
+Docker will **refuse** to remove a volume that is currently mounted by a running container. Always check first:
+
+```bash
+# List all containers using the shared-media volume
+docker ps -a --filter volume=shared-media
+```
+
+If you see running containers in the output, you must stop them first before removal.
+
+---
+
+### Case 1 — No containers are using the volume (safe to remove)
+
+**Step 1: Remove the Docker named volume**
+
+```bash
+docker volume rm shared-media
+```
+
+This removes the Docker volume entry only. The actual files at `/root/storage/shared` on the host are **not deleted** because this is a bind mount.
+
+**Step 2: Delete the host folder and its files** *(optional)*
+
+```bash
+rm -rf /root/storage/shared
+```
+
+> ⚠️ This permanently deletes all files inside the folder. Make sure you have a backup if needed.
+
+---
+
+### Case 2 — Other containers are currently using the volume
+
+Docker will block removal with this error:
+
+```
+Error response from daemon: remove shared-media:
+volume is in use - [<container_id>]
+```
+
+You need to stop and remove those containers first.
+
+**Step 1: Find which containers are using it**
+
+```bash
+docker ps -a --filter volume=shared-media
+```
+
+**Step 2: Stop the running containers**
+
+```bash
+docker stop <container_name_or_id>
+```
+
+Or if they belong to a compose project:
+
+```bash
+docker compose down
+```
+
+**Step 3: Remove the containers** *(if not already removed by compose down)*
+
+```bash
+docker rm <container_name_or_id>
+```
+
+**Step 4: Now remove the volume**
+
+```bash
+docker volume rm shared-media
+```
+
+**Step 5: Delete the host folder** *(optional)*
+
+```bash
+rm -rf /root/storage/shared
+```
+
+---
+
+### Case 3 — Force remove everything at once (nuclear option)
+
+If you want to tear down the entire compose stack including the volume in one command:
+
+```bash
+docker compose down --volumes
+```
+
+> ⚠️ `--volumes` removes **all** named volumes declared in the compose file. This cannot be undone.
+
+This still does **not** delete the host folder `/root/storage/shared` or its files since it is a bind mount. Delete it manually if needed:
+
+```bash
+rm -rf /root/storage/shared
+```
+
+---
+
+### Removal Summary
+
+| Scenario | Command |
+|----------|---------|
+| Check if volume is in use | `docker ps -a --filter volume=shared-media` |
+| Remove Docker volume only | `docker volume rm shared-media` |
+| Stop a blocking container | `docker stop <container_id>` |
+| Remove a blocking container | `docker rm <container_id>` |
+| Tear down full compose stack | `docker compose down --volumes` |
+| Delete host files permanently | `rm -rf /root/storage/shared` |
+
+> 💡 **Remember:** Removing the Docker volume (`docker volume rm`) never deletes the actual files on the host because `shared-media` is a bind mount. You must manually delete `/root/storage/shared` to remove the files.
+
+---
+
 ## Requirements
 
 - Docker Engine
