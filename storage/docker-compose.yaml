@@ -1,0 +1,17 @@
+services:
+  setup-storage:
+    image: alpine
+    command: sh -c "mkdir -p /root/storage/shared && chmod 777 /root/storage/shared && echo 'Storage ready!'"
+    volumes:
+      - /root/storage/shared:/root/storage/shared
+      - shared-media:/mnt/shared
+    restart: "no"
+
+volumes:
+  shared-media:
+    name: shared-media
+    driver: local
+    driver_opts:
+      type: none
+      device: /root/storage/shared
+      o: bind
